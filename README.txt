@@ -6,7 +6,7 @@ ABSTRACT
 REQUIREMENTS
     *   PDL
 
-        Tested version 2.4.2.
+        Tested version(s) 2.4.2, 2.4.3, 2.4.7_001.
 
 DESCRIPTION
     PDL::GA provides some basic utilities for running genetic algorithms on
@@ -29,7 +29,7 @@ AUTHOR
     Bryan Jurish <jurish@ling.uni-potsdam.de>
 
 COPYRIGHT
-    Copyright (c) 2006-2007, Bryan Jurish. All rights reserved.
+    Copyright (c) 2006-2011, Bryan Jurish. All rights reserved.
 
     This package is free software, and entirely without warranty. You may
     redistribute it and/or modify it under the same terms as Perl itself.
