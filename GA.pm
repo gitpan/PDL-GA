@@ -13,7 +13,7 @@ use DynaLoader;
 
 
 
-   $PDL::GA::VERSION = 0.05;
+   $PDL::GA::VERSION = 0.06;
    @ISA    = ( 'PDL::Exporter','DynaLoader' );
    push @PDL::Core::PP, __PACKAGE__;
    bootstrap PDL::GA $VERSION;
@@ -54,6 +54,9 @@ PDL::GA - Genetic algorithm utilities for PDLs
 
 
 
+*ga_indx = &PDL::long;
+
+
 
 =pod
 
@@ -86,11 +89,11 @@ sub roulette {
   if (defined($opts{to})) {
     $seli = $opts{to};
   } elsif (defined($opts{n})) {
-    $seli = zeroes(long, (($wmap->dims)[1..($wmap->ndims-1)]), $opts{n}) if (!defined($seli));
+    $seli = zeroes(ga_indx(), (($wmap->dims)[1..($wmap->ndims-1)]), $opts{n}) if (!defined($seli));
     $seli->resize((($wmap->dims)[1..($wmap->ndims-1)]), $opts{n})
       if ($seli->ndims != $wmap->ndims || $seli->dim(-1) != $opts{n});
   } else {
-    $seli = zeroes(long,1);
+    $seli = zeroes(ga_indx(),1);
   }
   my $wsum = $wmap->sumover->slice(',*1');
   my $selw = PDL->random($seli->dims);
@@ -124,11 +127,11 @@ sub roulette_nr {
   if (defined($opts{to})) {
     $seli = $opts{to};
   } elsif (defined($opts{n})) {
-    $seli = zeroes(long, (($wmap->dims)[1..($wmap->ndims-1)]), $opts{n}) if (!defined($seli));
+    $seli = zeroes(ga_indx(), (($wmap->dims)[1..($wmap->ndims-1)]), $opts{n}) if (!defined($seli));
     $seli->resize((($wmap->dims)[1..($wmap->ndims-1)]), $opts{n})
       if ($seli->ndims != $wmap->ndims || $seli->dim(-1) != $opts{n});
   } else {
-    $seli = zeroes(long,1);
+    $seli = zeroes(ga_indx(),1);
   }
   my $wsum = $wmap->sumover->slice(',*1');
   my $selw = PDL->random($seli->dims);
@@ -203,7 +206,7 @@ sub weightselect_nr {
 
 =for sig
 
-  Signature: (cumuweightmap(M); selweights(S); int [o]selindices(S))
+  Signature: (cumuweightmap(M); selweights(S); indx [o]selindices(S))
 
 Stochastically select $S objects from a pool $M objects, allowing repetitions.
 Cumulative likelihood selecting an object $i is given by $cumweightmap($i).  Target
@@ -239,7 +242,7 @@ sub cumuweightselect {
 
 =for sig
 
-  Signature: (cumuweightmap(M); selweights(S); int [o]selindices(S); int [t]trynext(M); byte [t]ignore(M))
+  Signature: (cumuweightmap(M); selweights(S); indx [o]selindices(S); indx [t]trynext(M); byte [t]ignore(M))
 
 Stochastically select $S objects from a pool $M objects, without repetitions.
 Really just a wrapper for PDL::Primitive::vesarch() and ga_make_unique().
@@ -248,9 +251,9 @@ Really just a wrapper for PDL::Primitive::vesarch() and ga_make_unique().
 
 sub cumuweightselect_nr {
   my ($cwmap,$selw,$seli,$try,$ignore) = @_;
-  $seli = zeroes(long,$selw->dims) if (!defined($seli));
+  $seli = zeroes(ga_indx(),$selw->dims) if (!defined($seli));
   $selw->vsearch($cwmap, $seli);
-  $try  = 1+PDL->sequence(long,$cwmap->dim(0)) if (!defined($try));
+  $try  = 1+PDL->sequence(ga_indx(),$cwmap->dim(0)) if (!defined($try));
   $seli->inplace->ga_make_unique($try, (defined($ignore) ? $ignore : qw()));
   return $seli;
 }
@@ -644,7 +647,7 @@ sub xover1 {
 	       ? ($kid .= $mom)
 	       : ($kid  = pdl($mom))));
   }
-  my $xpoint = PDL->zeroes(long,$mom->dim(1)) + $mom->dim(0);
+  my $xpoint = PDL->zeroes(ga_indx(),$mom->dim(1)) + $mom->dim(0);
   $xpoint->index($xwhich) .= PDL->random($xwhich->nelem)*($mom->dim(0)-1)+1;
   return _xover1($mom,$dad, $xpoint, (defined($kid) ? $kid : qw()));
 }
@@ -675,7 +678,7 @@ sub xover2 {
 	       ? ($kid .= $mom)
 	       : ($kid  = pdl($mom))));
   }
-  my $xpoint1 = PDL->zeroes(long,$mom->dim(1)) + $mom->dim(0);
+  my $xpoint1 = PDL->zeroes(ga_indx(),$mom->dim(1)) + $mom->dim(0);
   $xpoint1->index($xwhich) .= PDL->random($xwhich->nelem)*($mom->dim(0)-1)+1;
   my $xpoint2 = pdl($xpoint1);
   $xpoint2->index($xwhich) += 1+PDL->random($xwhich->nelem)*($mom->dim(0)-$xpoint1->index($xwhich));

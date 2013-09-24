@@ -6,7 +6,7 @@ ABSTRACT
 REQUIREMENTS
     *   PDL
 
-        Tested version(s) 2.4.2, 2.4.3, 2.4.7_001.
+        Tested version(s) 2.4.2, 2.4.3, 2.4.7_001, 2.4.9_015.
 
 DESCRIPTION
     PDL::GA provides some basic utilities for running genetic algorithms on
