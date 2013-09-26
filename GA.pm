@@ -13,7 +13,7 @@ use DynaLoader;
 
 
 
-   $PDL::GA::VERSION = 0.06;
+   $PDL::GA::VERSION = 0.07;
    @ISA    = ( 'PDL::Exporter','DynaLoader' );
    push @PDL::Core::PP, __PACKAGE__;
    bootstrap PDL::GA $VERSION;
@@ -54,7 +54,7 @@ PDL::GA - Genetic algorithm utilities for PDLs
 
 
 
-*ga_indx = &PDL::long;
+*ga_indx = &PDL::indx;
 
 
 
@@ -266,7 +266,7 @@ sub cumuweightselect_nr {
 
 =for sig
 
-  Signature: (int selected(S); int trynext(M); int [o]unique_selected(S); byte [t]ignore(M))
+  Signature: (indx selected(S); int trynext(M); indx [o]unique_selected(S); byte [t]ignore(M))
 
 
 Remove repetitions from a vector of selected items $selected() while retaining vector length.
@@ -281,7 +281,7 @@ Generally, $trynext() should be something like 1+sequence($M).
 
 =for bad
 
-ga_make_unique does handle bad values.
+ga_make_unique processes bad values.
 It will set the bad-value flag of all output piddles if the flag is set for any of the input piddles.
 
 
@@ -555,7 +555,7 @@ It will set the bad-value flag of all output piddles if the flag is set for any 
 
 =for sig
 
-  Signature: (mom(G); dad(G); int xpoint(); [o]kid(G))
+  Signature: (mom(G); dad(G); indx xpoint(); [o]kid(G))
 
 (Low-level method)
 
@@ -592,7 +592,7 @@ It will set the bad-value flag of all output piddles if the flag is set for any 
 
 =for sig
 
-  Signature: (mom(G); dad(G); int xstart(); int xend(); [o]kid(G))
+  Signature: (mom(G); dad(G); indx xstart(); int xend(); [o]kid(G))
 
 (Low-level method)
 
